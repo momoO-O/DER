@@ -4,6 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 from torch.nn import functional as F
+from torch import long
 
 from models.utils.continual_model import ContinualModel
 from utils.args import ArgumentParser, add_experiment_args, add_management_args, add_rehearsal_args
@@ -34,6 +35,9 @@ class Der(ContinualModel):
         self.opt.zero_grad()
 
         outputs = self.net(inputs)
+        # TODO
+        if labels.dtype != long:
+            labels = labels.to(long)
         loss = self.loss(outputs, labels)
 
         if not self.buffer.is_empty():
